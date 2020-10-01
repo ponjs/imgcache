@@ -1,0 +1,20 @@
+{
+  "name": "imgcache",
+  "version": "1.0.1",
+  "description": "UNIAPP APP平台上图片缓存组件",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ponjs/imgcache.git"
+  },
+  "keywords": [
+    "uni-app",
+    "imgcache"
+  ],
+  "author": "ponjs",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ponjs/imgcache/issues"
+  },
+  "homepage": "https://github.com/ponjs/imgcache#readme"
+}

@@ -1,25 +1,27 @@
 /**
  * 根据目录获取目录大小
  * @param {string} dir 目录地址
- * @returns {Promise} 返回目录大小
+ * @returns {Promise} 返回目录大小，单位字节
  */
 export function getDirSize(dir) {
   return new Promise(resolve => {
     // #ifdef APP-PLUS
-    plus.io.resolveLocalFileSystemURL(dir, entry => {
-      entry.getMetadata(res => {
-        resolve(res.size || 0);
-      }, () => {
-        resolve(0);
-      }, true);
-    }, () => {
-      resolve(0);
-    });
+    plus.io.resolveLocalFileSystemURL(
+      dir,
+      entry => {
+        entry.getMetadata(
+          res => resolve(res.size || 0),
+          () => resolve(0),
+          true
+        );
+      },
+      () => resolve(0)
+    );
     // #endif
 
     // #ifndef APP-PLUS
     resolve(0);
-		// #endif
+    // #endif
   });
 }
 
@@ -46,5 +48,5 @@ export function formatSize(size) {
   else if (s < 1024) return s + 'B';
   else if (s < 1048576) return (s / 1024).toFixed(2) + 'KB';
   else if (s < 1073741824) return (s / 1048576).toFixed(2) + 'MB';
-  else return(s / 1073741824).toFixed(2) + 'GB';
+  else return (s / 1073741824).toFixed(2) + 'GB';
 }

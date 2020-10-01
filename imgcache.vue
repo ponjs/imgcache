@@ -1,17 +1,18 @@
 <template>
-	<image
-		class="img-cache"
-		:src="resource"
-		:mode="mode"
-		:lazy-load="lazyLoad"
+  <image
+    class="imgcache"
+    :src="resource"
+    :mode="mode"
+    :lazy-load="lazyLoad"
     :fade-show="fadeShow"
     :webp="webp"
     :show-menu-by-longpress="showMenuByLongpress"
-		:style="customStyle"
+    :style="customStyle"
     @tap.stop="fnEvent('click', $event)"
     @error="fnEvent('error', $event)"
-    @load="fnEvent('load', $event)">
-	</image>
+    @load="fnEvent('load', $event)"
+  >
+  </image>
 </template>
 
 <script>
@@ -30,107 +31,105 @@
  * @event {Function} error 错误发生
  * @event {Function} load 图片载入完毕
  */
+
+// #ifdef APP-PLUS
+import storage from './storage';
+import download from './download';
+import path from 'path';
+// #endif
+
 export default {
-	props: {
-    // 图片资源地址
-		src: {
-			type: String
-		},
-    // 图片裁剪、缩放的模式
-		mode: {
+  name: 'imgcache',
+  props: {
+    src: {
+      type: String
+    },
+    mode: {
       type: String,
       default: 'scaleToFill'
-		},
-    // 图片懒加载。只针对page与scroll-view下的image有效（微信小程序、App、百度小程序、字节跳动小程序）
-		lazyLoad: {
-			type: Boolean,
-			default: false
     },
-    // 图片显示动画效果（仅App-nvue 2.3.4+ Android有效）
+    lazyLoad: {
+      type: Boolean,
+      default: false
+    },
     fadeShow: {
       type: Boolean,
       default: true
     },
-    // 默认不解析 webP 格式，只支持网络资源（微信小程序2.9.0）
     webp: {
       type: Boolean,
       default: false
     },
-    // 开启长按图片显示识别小程序码菜单（微信小程序2.7.0）
     showMenuByLongpress: {
       type: Boolean,
       default: false
     },
-    // 缓存的文件目录（文件夹开头不能有_）
-		dir: {
-			type: String,
-			default: 'image'
-		},
-    // 自定义样式
-		customStyle: {
-			type: Object,
-			default: () => ({})
-		}
-	},
-	data() {
-		return {
-			localFile: null,    // 本地文件
-      localPath: ''       // 根据 src 和 dir 拼接处理的本地地址
-		};
-	},
-	computed: {
-		resource() {
-			return this.localFile || this.src;
-		}
-	},
-	created() {
-		// #ifdef APP-PLUS
-    this.localPath = this.getLocalPath();
-		this.init();
-		// #endif
-	},
-	methods: {
-		async init() {
-			const cache = await this.getCache();
-			// this.localFile = cache || await this.downloadFile();
-      if (cache) this.localFile = cache;
-      else this.downloadFile();
-		},
-    // 下载文件
-		downloadFile() {
-			return new Promise(resolve => {
-				const task = plus.downloader.createDownload(this.src, {
-          filename: this.localPath
-				}, (download, status) => {
-					if (status === 200) {
-						resolve(download.filename);
-					} else {
-						resolve(null);
-					}
-				});
-				task.start();
-			})
-		},
-		// 获取缓存
-		getCache() {
-			return new Promise(resolve => {
-				plus.io.resolveLocalFileSystemURL(this.localPath, entry => {
-					resolve(this.localPath);
-				}, (e) => {
-					resolve(null);
-				});
-			});
-		},
-    // 获取本地路径
-    getLocalPath() {
-      const name = this.src.substring(this.src.lastIndexOf('/') + 1);
-      const path = this.dir.replace(/(^\/)|(\/$)/g, '');
-      return `_doc/${path ? path + '/' : '' }${name}`;
+    dir: {
+      type: String,
+      default: 'image'
+    },
+    customStyle: {
+      type: Object,
+      default: () => ({})
+    }
+  },
+  data() {
+    return {
+      localPath: null // 本地文件路径
+    };
+  },
+  computed: {
+    resource() {
+      return this.localPath || this.src;
+    }
+  },
+  created() {
+    // #ifdef APP-PLUS
+    this.init();
+    // #endif
+  },
+  methods: {
+    async init() {
+      // 查询缓存是否存在
+      const [select] = storage.select({ url: this.src });
+      if (select) {
+        const path = await this.hasFile(select.local);
+        if (path) return (this.localPath = path);
+        // 如果本地文件不存在则删除缓存数据
+        storage.delete(select);
+      }
+      const local = await download(this.src, this.filename());
+      if (!local) return;
+      storage.insert({ url: this.src, local });
+    },
+    // 判断本地文件是否存在
+    hasFile(url) {
+      return new Promise(resolve => {
+        plus.io.resolveLocalFileSystemURL(
+          url,
+          () => resolve(url),
+          () => resolve(null)
+        );
+      });
+    },
+    // 生成随机文件名
+    filename() {
+      const CHARS = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      let random = '';
+      for (let i = 0; i < 4; i++) {
+        const index = parseInt(Math.random() * CHARS.length);
+        random += CHARS[index];
+      }
+
+      const dir = this.dir.replace(/(^\/)|(\/$)/g, '');
+      const name = Date.now() + random + path.extname(this.src);
+
+      return `_doc/${dir}/${name}`;
     },
     // 发送事件
     fnEvent(emit, event) {
       this.$emit(emit, event);
     }
-	}
-}
+  }
+};
 </script>
