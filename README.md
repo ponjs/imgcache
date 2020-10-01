@@ -6,7 +6,7 @@
 ## Install
 
 - 在 uni-app 插件市场右上角选择`使用HBuilderX 导入插件`或者`下载插件ZIP`。
-- 将下载解压后的`img-cache`文件夹，复制到`components`目录内。
+- 将下载解压后的`imgcache`文件夹，复制到`components`目录内。
 
 ## Usage
 
@@ -14,7 +14,7 @@
 
 ```Javascript
 // 引入
-import ImgCache from '@/components/img-cache/img-cache.vue';
+import ImgCache from '@/components/imgcache/imgcache.vue';
 
 // 注册
 components: {
@@ -22,7 +22,7 @@ components: {
 }
 
 // 使用
-<img-cache src="https://example.com/image.png"></img-cache>
+<imgcache src="https://example.com/image.png"></imgcache>
 ```
 
 ### HBuilderX
@@ -30,14 +30,14 @@ components: {
 由于 HBuilder X 的[easycom](https://uniapp.dcloud.io/collocation/pages?id=easycom)，可以不用引用、注册，直接在页面中使用
 
 ```HTML
-<img-cache src="https://example.com/image.png"></img-cache>
+<imgcache src="https://example.com/image.png"></imgcache>
 ```
 
 ## API
 
 ### Props
 
-`image`的属性在`img-cache`组件上是一样可以用的，这里在原有的基础上加了几个属性
+`image`的属性在`imgcache`组件上是一样可以用的，这里在原有的基础上加了几个属性
 
 | 属性名       | 类型   | 默认值 | 说明                                 |
 | :----------- | :----- | :----- | :----------------------------------- |
@@ -52,11 +52,11 @@ components: {
 
 ### Method
 
-这里我写了几个方法用于处理缓存文件，可无需引入组件，而是引入`img-cache`目录下的`index.js`，文件路径格式查看[RelativeURL](http://www.html5plus.org/doc/zh_cn/io.html#plus.io.RelativeURL)
+这里我写了几个方法用于处理缓存文件，可无需引入组件，而是引入组件`imgcache`目录下的`index.js`，文件路径格式查看[RelativeURL](http://www.html5plus.org/doc/zh_cn/io.html#plus.io.RelativeURL)
 
 ```Javascript
 // 引入
-import { getDirSize, removeDir, formatSize } from '@/components/img-cache';
+import { getDirSize, removeDir, formatSize } from '@/components/imgcache';
 ```
 
 **getDirSize(dir)**
