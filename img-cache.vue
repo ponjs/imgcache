@@ -66,7 +66,7 @@ export default {
     },
     dir: {
       type: String,
-      default: 'image'
+      default: 'imgcache'
     },
     customStyle: {
       type: Object,
