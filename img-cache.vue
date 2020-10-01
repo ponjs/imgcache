@@ -90,17 +90,18 @@ export default {
   },
   methods: {
     async init() {
-      // 查询缓存是否存在
-      const [select] = storage.select({ url: this.src });
+      if (!/^https?:\/\//.test(this.src)) return; // 判断是否网络地址
+
+      const [select] = storage.select({ url: this.src }); // 查询缓存是否存在
+
       if (select) {
-        const path = await this.hasFile(select.local);
-        if (path) return (this.localPath = path);
-        // 如果本地文件不存在则删除缓存数据
-        storage.delete(select);
+        const path = await this.hasFile(select.local); // 判断本地文件是否存在
+        if (path) return (this.localPath = path); // 如果存在则显示本地文件
+        storage.delete(select); // 如果本地文件不存在则删除缓存数据
       }
-      const local = await download(this.src, this.filename());
-      if (!local) return;
-      storage.insert({ url: this.src, local });
+
+      const local = await download(this.src, this.filename()); // 下载文件
+      if (local) storage.insert({ url: this.src, local }); // 缓存数据
     },
     // 判断本地文件是否存在
     hasFile(url) {
@@ -112,7 +113,7 @@ export default {
         );
       });
     },
-    // 生成随机文件名
+    // 生成随机文件名后的路径
     filename() {
       const CHARS = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
       let random = '';
