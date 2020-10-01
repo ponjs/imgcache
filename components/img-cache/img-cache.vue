@@ -1,6 +1,6 @@
 <template>
   <image
-    class="imgcache"
+    class="img-cache"
     :src="resource"
     :mode="mode"
     :lazy-load="lazyLoad"
