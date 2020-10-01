@@ -1,6 +1,6 @@
 {
   "name": "imgcache",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "UNIAPP APP平台上图片缓存组件",
   "repository": {
     "type": "git",
