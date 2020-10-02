@@ -7,7 +7,7 @@
     :fade-show="fadeShow"
     :webp="webp"
     :show-menu-by-longpress="showMenuByLongpress"
-    :style="customStyle"
+    :style="style"
     @tap.stop="fnEvent('click', $event)"
     @error="fnEvent('error', $event)"
     @load="fnEvent('load', $event)"
@@ -26,6 +26,8 @@
  * @property {boolean} webp 默认不解析 webP 格式，只支持网络资源
  * @property {boolean} show-menu-by-longpress 开启长按图片显示识别小程序码菜单
  * @property {string} dir 缓存的文件目录（文件夹开头不能有_）
+ * @property {string} width 宽度，单位任意，如果为数值，则为 rpx 单位
+ * @property {string} height 高度，单位任意，如果为数值，则为 rpx 单位
  * @property {object} custom-style 自定义样式
  * @event {Function} click 点击
  * @event {Function} error 错误发生
@@ -33,9 +35,10 @@
  */
 
 // #ifdef APP-PLUS
+import path from 'path';
 import storage from './storage';
 import download from './download';
-import path from 'path';
+import { resolveFile } from './index';
 // #endif
 
 export default {
@@ -68,6 +71,14 @@ export default {
       type: String,
       default: 'imgcache'
     },
+    width: {
+      type: [String, Number],
+      default: '100%'
+    },
+    height: {
+      type: [String, Number],
+      default: 'auto'
+    },
     customStyle: {
       type: Object,
       default: () => ({})
@@ -75,17 +86,25 @@ export default {
   },
   data() {
     return {
-      localPath: null // 本地文件路径
+      resource: ''
     };
   },
   computed: {
-    resource() {
-      return this.localPath || this.src;
+    style() {
+      return {
+        width: this.addUnit(this.width),
+        height: this.addUnit(this.height),
+        ...this.customStyle
+      };
     }
   },
   created() {
     // #ifdef APP-PLUS
     this.init();
+    // #endif
+
+    // #ifndef APP-PLUS
+    this.resource = this.src;
     // #endif
   },
   methods: {
@@ -95,23 +114,14 @@ export default {
       const [select] = storage.select({ url: this.src }); // 查询缓存是否存在
 
       if (select) {
-        const path = await this.hasFile(select.local); // 判断本地文件是否存在
-        if (path) return (this.localPath = path); // 如果存在则显示本地文件
+        const path = select.local;
+        if (await resolveFile(path)) return (this.localPath = path); // 判断本地文件是否存在 如果存在则显示本地文件
         storage.delete(select); // 如果本地文件不存在则删除缓存数据
       }
+      this.resource = this.src;
 
       const local = await download(this.src, this.filename()); // 下载文件
       if (local) storage.insert({ url: this.src, local }); // 缓存数据
-    },
-    // 判断本地文件是否存在
-    hasFile(url) {
-      return new Promise(resolve => {
-        plus.io.resolveLocalFileSystemURL(
-          url,
-          () => resolve(url),
-          () => resolve(null)
-        );
-      });
     },
     // 生成随机文件名后的路径
     filename() {
@@ -130,7 +140,18 @@ export default {
     // 发送事件
     fnEvent(emit, event) {
       this.$emit(emit, event);
+    },
+    // 添加单位，如果为数值则为rpx单位，否则直接返回
+    addUnit(value = 'auto') {
+      value = String(value);
+      return /^(?:-?\d+|-?\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/.test(value) ? `${value}rpx` : value;
     }
   }
 };
 </script>
+
+<style scoped>
+.img-cache {
+  will-change: transform;
+}
+</style>

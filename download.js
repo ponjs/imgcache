@@ -10,10 +10,14 @@ function download(url, filename) {
   return new Promise(resolve => {
     if (queue.includes(url)) return;
     queue.push(url);
-    const task = plus.downloader.createDownload(url, { filename: filename }, (download, status) => {
-      queue.splice(queue.indexOf(url), 1);
-      resolve(status === 200 ? download.filename : null);
-    });
+    const task = plus.downloader.createDownload(
+      url,
+      filename ? { filename } : {},
+      (download, status) => {
+        queue.splice(queue.indexOf(url), 1);
+        resolve(status === 200 ? download.filename : null);
+      }
+    );
     task.start();
   });
 }

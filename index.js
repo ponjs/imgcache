@@ -1,21 +1,34 @@
 /**
- * 根据目录获取目录大小
- * @param {string} dir 目录地址
- * @returns {Promise} 返回目录大小，单位字节
+ * 获取目录对象或文件对象
+ * @param {string} url 要操作文件或目录的URL地址
+ * @returns {Promise<object>} 若成功返回请求到的目录或文件对象，否则返回 null
  */
-export function getDirSize(dir) {
+export function resolveFile(url) {
   return new Promise(resolve => {
     // #ifdef APP-PLUS
-    plus.io.resolveLocalFileSystemURL(
-      dir,
-      entry => {
-        entry.getMetadata(
-          res => resolve(res.size || 0),
-          () => resolve(0),
-          true
-        );
-      },
-      () => resolve(0)
+    plus.io.resolveLocalFileSystemURL(url, resolve, () => resolve(null));
+    // #endif
+
+    // #ifndef APP-PLUS
+    resolve(null);
+    // #endif
+  });
+}
+
+/**
+ * 根据目录获取目录大小
+ * @param {string} dir 目录地址
+ * @returns {Promise<number>} 返回目录大小，单位字节
+ */
+export function getDirSize(dir) {
+  return new Promise(async resolve => {
+    // #ifdef APP-PLUS
+    const entry = await resolveFile(dir);
+    if (!entry) return resolve(0);
+    entry.getMetadata(
+      res => resolve(res.size || 0),
+      () => resolve(0),
+      true
     );
     // #endif
 
@@ -28,12 +41,19 @@ export function getDirSize(dir) {
 /**
  * 删除目录
  * @param {string} dir 目录地址
+ * @returns {Promise<boolean>} 删除状态
  */
 export function removeDir(dir) {
   // #ifdef APP-PLUS
-  plus.io.resolveLocalFileSystemURL(dir, entry => {
-    entry.removeRecursively();
+  return new Promise(async resolve => {
+    const entry = await resolveFile(dir);
+    if (!entry) return resolve(false);
+    entry.removeRecursively(
+      () => resolve(true),
+      () => resolve(false)
+    );
   });
+
   // #endif
 }
 
