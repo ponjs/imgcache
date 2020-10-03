@@ -16,9 +16,17 @@
 </template>
 
 <script>
+// #ifdef APP-PLUS
+import path from 'path';
+import storage from './storage';
+import download from './download';
+import { resolveFile } from './index';
+// #endif
+
 /**
- * imgcache 图片缓存
+ * ImgCache 图片缓存
  * @description APP端图片缓存
+ * @tutorial https://ext.dcloud.net.cn/plugin?id=2515
  * @property {string} src 图片资源地址
  * @property {string} mode 图片裁剪、缩放的模式
  * @property {boolean} lazyLoad 是否图片懒加载
@@ -29,18 +37,11 @@
  * @property {string} width 宽度，单位任意，如果为数值，则为 rpx 单位
  * @property {string} height 高度，单位任意，如果为数值，则为 rpx 单位
  * @property {object} custom-style 自定义样式
- * @event {Function} click 点击
+ * @event {Function} click 点击图片
  * @event {Function} error 错误发生
  * @event {Function} load 图片载入完毕
+ * @example <img-cache src="https://example.com/image.png"></img-cache>
  */
-
-// #ifdef APP-PLUS
-import path from 'path';
-import storage from './storage';
-import download from './download';
-import { resolveFile } from './index';
-// #endif
-
 export default {
   name: 'ImgCache',
   props: {
