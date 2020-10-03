@@ -16,7 +16,7 @@ export function resolveFile(url) {
 }
 
 /**
- * 根据目录获取目录大小
+ * 获取目录大小
  * @param {string} dir 目录地址
  * @returns {Promise<number>} 返回目录大小，单位字节
  */
@@ -44,17 +44,20 @@ export function getDirSize(dir) {
  * @returns {Promise<boolean>} 删除状态
  */
 export function removeDir(dir) {
-  // #ifdef APP-PLUS
   return new Promise(async resolve => {
+    // #ifdef APP-PLUS
     const entry = await resolveFile(dir);
     if (!entry) return resolve(false);
     entry.removeRecursively(
       () => resolve(true),
       () => resolve(false)
     );
-  });
+    // #endif
 
-  // #endif
+    // #ifndef APP-PLUS
+    resolve(false);
+    // #endif
+  });
 }
 
 /**

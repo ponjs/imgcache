@@ -69,7 +69,7 @@ import { resolveFile, getDirSize, removeDir, formatSize } from '@/components/img
 
 **getDirSize(dir)**
 
-- 根据目录获取目录大小
+- 获取目录大小
 - 参数：`dir` `<string>` 目录地址
 - 返回：`<Promise>` 目录大小，单位字节
 
