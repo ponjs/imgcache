@@ -42,8 +42,8 @@ components: {
 | 属性名       | 类型             | 默认值   | 说明                                             |
 | :----------- | :--------------- | :------- | :----------------------------------------------- |
 | dir          | string           | imgcache | 缓存的文件目录，文件夹开头不能有\_               |
-| width        | string \| number | 100%     | 宽度，单位任意，如果为数值，则为 rpx 单位        |
-| height       | string \| number | auto     | 高度，单位任意，如果为数值，则为 rpx 单位        |
+| width        | string \| number | -        | 宽度，单位任意，如果为数值，则为 rpx 单位        |
+| height       | string \| number | -        | 高度，单位任意，如果为数值，则为 rpx 单位        |
 | custom-style | object           | -        | 自定义样式，自定义样式宽高权重大于属性设定的宽高 |
 
 ### Events
