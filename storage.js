@@ -21,7 +21,7 @@ class Storage {
   // 删除数据
   delete(obj = {}) {
     const origin = this.getStorage();
-    const storage = origin.filter(ele => !Object.keys(obj).every(k => obj[k] === ele[k]));
+    const storage = origin.filter(ele => !Object.keys(obj).some(k => obj[k] === ele[k]));
     this.setStorage(storage);
     return storage;
   }

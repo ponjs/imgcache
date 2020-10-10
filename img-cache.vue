@@ -17,7 +17,6 @@
 
 <script>
 // #ifdef APP-PLUS
-import path from 'path';
 import storage from './storage';
 import download from './download';
 import { resolveFile } from './index';
@@ -97,20 +96,30 @@ export default {
       };
     }
   },
-  created() {
-    // #ifdef APP-PLUS
-    this.init();
-    // #endif
-
-    // #ifndef APP-PLUS
-    this.setSrc();
-    // #endif
+  watch: {
+    src: {
+      handler: 'init',
+      immediate: true
+    }
   },
   methods: {
-    async init() {
-      if (!/^https?:\/\//.test(this.src)) return this.setSrc(); // 判断是否网络地址
+    // 初始化
+    init() {
+      // #ifdef APP-PLUS
+      this.fnCache();
+      // #endif
 
-      const [select] = storage.select({ url: this.src }); // 查询缓存是否存在
+      // #ifndef APP-PLUS
+      this.setSrc();
+      // #endif
+    },
+    // 获取缓存
+    async fnCache() {
+      const url = this.src; // 赋值到新变量，避免下载时 src 更改，从而网络地址和本地地址图片不一致
+
+      if (!/^https?:\/\//.test(url)) return this.setSrc(); // 判断是否网络地址
+
+      const [select] = storage.select({ url }); // 查询缓存是否存在
 
       if (select) {
         const path = select.local;
@@ -119,22 +128,8 @@ export default {
       }
       this.setSrc();
 
-      const local = await download(this.src, this.filename()); // 下载文件
-      if (local) storage.insert({ url: this.src, local }); // 缓存数据
-    },
-    // 生成随机文件名后的路径
-    filename() {
-      const CHARS = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-      let random = '';
-      for (let i = 0; i < 4; i++) {
-        const index = parseInt(Math.random() * CHARS.length);
-        random += CHARS[index];
-      }
-
-      const dir = this.dir.replace(/(^\/)|(\/$)/g, '');
-      const name = Date.now() + random + path.extname(this.src);
-
-      return `_doc/${dir}/${name}`;
+      const local = await download(url, this.dir); // 下载文件
+      if (local) storage.insert({ url, local }); // 缓存数据
     },
     // 发送事件
     fnEvent(emit, event) {
