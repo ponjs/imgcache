@@ -1,6 +1,6 @@
-import path from 'path';
+import path from 'path'
 
-var queue = []; // 下载队列 避免重复下载
+var queue = [] // 下载队列 避免重复下载
 
 /**
  * 下载文件
@@ -10,18 +10,18 @@ var queue = []; // 下载队列 避免重复下载
  */
 function download(url, dir) {
   return new Promise(resolve => {
-    if (queue.includes(url)) return;
-    queue.push(url);
+    if (queue.includes(url)) return
+    queue.push(url)
     const task = plus.downloader.createDownload(
       url,
       dir ? { filename: filename(url, dir) } : {},
       (download, status) => {
-        queue.splice(queue.indexOf(url), 1);
-        resolve(status === 200 ? download.filename : null);
+        queue.splice(queue.indexOf(url), 1)
+        resolve(status === 200 ? download.filename : null)
       }
-    );
-    task.start();
-  });
+    )
+    task.start()
+  })
 }
 
 /**
@@ -31,17 +31,17 @@ function download(url, dir) {
  * @returns {string} 随机文件名后的路径
  */
 function filename(url, dir) {
-  const CHARS = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  let random = '';
+  const CHARS = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  let random = ''
   for (let i = 0; i < 4; i++) {
-    const index = parseInt(Math.random() * CHARS.length);
-    random += CHARS[index];
+    const index = parseInt(Math.random() * CHARS.length)
+    random += CHARS[index]
   }
 
-  dir = dir.replace(/(^\/)|(\/$)/g, '');
-  const name = Date.now() + random + path.extname(url);
+  dir = dir.replace(/(^\/)|(\/$)/g, '')
+  const name = Date.now() + random + path.extname(url)
 
-  return `_doc/${dir}/${name}`;
+  return `_doc/${dir}/${name}`
 }
 
-export default download;
+export default download

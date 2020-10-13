@@ -6,13 +6,13 @@
 export function resolveFile(url) {
   return new Promise(resolve => {
     // #ifdef APP-PLUS
-    plus.io.resolveLocalFileSystemURL(url, resolve, () => resolve(null));
+    plus.io.resolveLocalFileSystemURL(url, resolve, () => resolve(null))
     // #endif
 
     // #ifndef APP-PLUS
-    resolve(null);
+    resolve(null)
     // #endif
-  });
+  })
 }
 
 /**
@@ -23,19 +23,19 @@ export function resolveFile(url) {
 export function getDirSize(dir) {
   return new Promise(async resolve => {
     // #ifdef APP-PLUS
-    const entry = await resolveFile(dir);
-    if (!entry) return resolve(0);
+    const entry = await resolveFile(dir)
+    if (!entry) return resolve(0)
     entry.getMetadata(
       res => resolve(res.size || 0),
       () => resolve(0),
       true
-    );
+    )
     // #endif
 
     // #ifndef APP-PLUS
-    resolve(0);
+    resolve(0)
     // #endif
-  });
+  })
 }
 
 /**
@@ -46,18 +46,18 @@ export function getDirSize(dir) {
 export function removeDir(dir) {
   return new Promise(async resolve => {
     // #ifdef APP-PLUS
-    const entry = await resolveFile(dir);
-    if (!entry) return resolve(false);
+    const entry = await resolveFile(dir)
+    if (!entry) return resolve(false)
     entry.removeRecursively(
       () => resolve(true),
       () => resolve(false)
-    );
+    )
     // #endif
 
     // #ifndef APP-PLUS
-    resolve(false);
+    resolve(false)
     // #endif
-  });
+  })
 }
 
 /**
@@ -66,10 +66,10 @@ export function removeDir(dir) {
  * @returns {string} 格式化后的文字
  */
 export function formatSize(size) {
-  const s = parseInt(size);
-  if (s === 0) return '0B';
-  else if (s < 1024) return s + 'B';
-  else if (s < 1048576) return (s / 1024).toFixed(2) + 'KB';
-  else if (s < 1073741824) return (s / 1048576).toFixed(2) + 'MB';
-  else return (s / 1073741824).toFixed(2) + 'GB';
+  const s = parseInt(size)
+  if (s === 0) return '0B'
+  else if (s < 1024) return s + 'B'
+  else if (s < 1048576) return (s / 1024).toFixed(2) + 'KB'
+  else if (s < 1073741824) return (s / 1048576).toFixed(2) + 'MB'
+  else return (s / 1073741824).toFixed(2) + 'GB'
 }
