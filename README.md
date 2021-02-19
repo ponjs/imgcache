@@ -54,7 +54,7 @@ components: {
 
 ### Method
 
-这里我写了几个方法用于处理缓存文件，可无需引入组件，而是引入组件`img-cache`目录下的`index.js`，文件路径格式查看[RelativeURL](http://www.html5plus.org/doc/zh_cn/io.html#plus.io.RelativeURL)
+**1、这里我写了几个方法用于处理缓存文件，可无需引入组件，而是引入组件`img-cache`目录下的`index.js`，文件路径格式查看[RelativeURL](http://www.html5plus.org/doc/zh_cn/io.html#plus.io.RelativeURL)**
 
 ```Javascript
 // 引入
@@ -84,3 +84,14 @@ import { resolveFile, getDirSize, removeDir, formatSize } from '@/components/img
 - 格式化字节大小
 - 参数：`size` `<number>` 字节大小
 - 返回：`<String>` 转换后的文字
+
+**2、以及处理缓存数据的方法**
+
+```Javascript
+// 引入
+import storage from '@/components/img-cache/storage';
+```
+
+**clear()**
+
+- 清空缓存数据
