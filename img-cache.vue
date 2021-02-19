@@ -91,9 +91,11 @@ export default {
     style() {
       let style = { willChange: 'transform' }
 
-      // 判断传过来的值不为 undefined null ''
-      if ((this.width ?? '') !== '') style.width = this.addUnit(this.width)
-      if ((this.height ?? '') !== '') style.height = this.addUnit(this.height)
+      // 判断传过来的值是否为 undefined null false ''
+      const isEmpty = val => [undefined, null, false, ''].includes(val)
+
+      !isEmpty(this.width) && (style.width = this.addUnit(this.width))
+      !isEmpty(this.height) && (style.height = this.addUnit(this.height))
 
       return {
         ...style,
