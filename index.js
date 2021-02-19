@@ -1,4 +1,9 @@
 /**
+ * 处理缓存数据
+ */
+export * as storage from './storage'
+
+/**
  * 获取目录对象或文件对象
  * @param {string} url 要操作文件或目录的URL地址
  * @returns {Promise<object>} 若成功返回请求到的目录或文件对象，否则返回 null

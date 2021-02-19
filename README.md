@@ -54,44 +54,39 @@ components: {
 
 ### Method
 
-**1、这里我写了几个方法用于处理缓存文件，可无需引入组件，而是引入组件`img-cache`目录下的`index.js`，文件路径格式查看[RelativeURL](http://www.html5plus.org/doc/zh_cn/io.html#plus.io.RelativeURL)**
-
 ```Javascript
 // 引入
-import { resolveFile, getDirSize, removeDir, formatSize } from '@/components/img-cache';
+import { resolveFile, getDirSize, removeDir, formatSize, storage } from '@/components/img-cache';
 ```
+
+① 处理缓存文件（路径格式查看[RelativeURL](http://www.html5plus.org/doc/zh_cn/io.html#plus.io.RelativeURL)）
 
 **resolveFile(url)**
 
 - 获取[目录对象](http://www.html5plus.org/doc/zh_cn/io.html#plus.io.DirectoryEntry)或[文件对象](http://www.html5plus.org/doc/zh_cn/io.html#plus.io.FileEntry)
 - 参数：`url` `<string>` 要操作文件或目录的 URL 地址
-- 返回：`<Promise>` 目录或文件对象，若不存在返回 null
+- 返回：`Promise<object>` 目录或文件对象，若不存在返回 null
 
 **getDirSize(dir)**
 
 - 获取目录大小
 - 参数：`dir` `<string>` 目录地址
-- 返回：`<Promise>` 目录大小，单位字节
+- 返回：`Promise<number>` 目录大小，单位字节
 
 **removeDir(dir)**
 
 - 删除目录
 - 参数：`dir` `<string>` 目录地址
-- 返回：`<Promise>` 删除状态
+- 返回：`Promise<boolean>` 删除状态
 
 **formatSize(size)**
 
 - 格式化字节大小
 - 参数：`size` `<number>` 字节大小
-- 返回：`<String>` 转换后的文字
+- 返回：`string` 转换后的文字
 
-**2、以及处理缓存数据的方法**
+② 处理缓存数据
 
-```Javascript
-// 引入
-import storage from '@/components/img-cache/storage';
-```
-
-**clear()**
+**storage.clear()**
 
 - 清空缓存数据
