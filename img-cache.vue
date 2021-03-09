@@ -17,9 +17,8 @@
 
 <script>
 // #ifdef APP-PLUS
-import storage from './storage'
 import download from './download'
-import { resolveFile } from './index'
+import { resolveFile, storage } from './index'
 // #endif
 
 /**
@@ -89,7 +88,7 @@ export default {
   },
   computed: {
     style() {
-      let style = { willChange: 'transform' }
+      const style = { willChange: 'transform' }
 
       // 判断传过来的值是否为 undefined null false ''
       const isEmpty = val => [undefined, null, false, ''].includes(val)
@@ -138,18 +137,18 @@ export default {
       const local = await download(url, this.dir) // 下载文件
       if (local) storage.insert({ url, local }) // 缓存数据
     },
-    // 发送事件
-    fnEvent(emit, event) {
-      this.$emit(emit, event)
-    },
     // 设置图片资源地址
     setSrc(src) {
       this.resource = src || this.src
     },
     // 添加单位，如果为数值则为rpx单位，否则直接返回
     addUnit(value) {
-      value = String(value ?? '')
+      value = String(value)
       return /^(?:-?\d+|-?\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/.test(value) ? `${value}rpx` : value
+    },
+    // 发送事件
+    fnEvent(emit, event) {
+      this.$emit(emit, event)
     }
   }
 }

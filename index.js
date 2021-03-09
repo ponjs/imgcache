@@ -1,7 +1,9 @@
+import storage  from './storage'
+
 /**
  * 处理缓存数据
  */
-export * as storage from './storage'
+export { storage }
 
 /**
  * 获取目录对象或文件对象
