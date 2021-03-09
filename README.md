@@ -1,33 +1,16 @@
 ## ✨ Feature
 
-- UNIAPP APP 平台上图片缓存组件
+- UNIAPP APP 平台（vue）上图片缓存组件
 - 可兼容其他平台写法
 
 ## 🥗 Install
 
-- 在 uni-app 插件市场右上角选择`使用HBuilderX 导入插件`或者`下载插件ZIP`。
-- 将下载解压后的`img-cache`文件夹，复制到`components`目录内。
+- 在 uni-app 插件市场右上角选择`使用HBuilderX 导入插件`或者`下载插件ZIP`
+- 将下载解压后的`img-cache`文件夹，复制到`components`目录内
 
 ## 🥐 Usage
 
-### Vue CLI
-
-```Javascript
-// 引入
-import ImgCache from '@/components/img-cache/img-cache.vue';
-
-// 注册
-components: {
-  ImgCache
-}
-
-// 使用
-<img-cache src="https://example.com/image.png"></img-cache>
-```
-
-### HBuilderX
-
-由于 HBuilder X 的[easycom](https://uniapp.dcloud.io/collocation/pages?id=easycom)，可以不用引用、注册，直接在页面中使用
+由于 uni-app 的[easycom](https://uniapp.dcloud.io/collocation/pages?id=easycom)，可以不用引用、注册，直接在页面中使用
 
 ```HTML
 <img-cache src="https://example.com/image.png"></img-cache>
